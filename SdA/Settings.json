@@ -1,0 +1,7 @@
+{
+    "train_path": "../data/train.csv",
+    "test_path": "../data/test.csv",
+    "model_path": "../Models/basic_model.pickle",
+    "mnist_path": "../data/mnist.pkl.gz",
+    "submission_path": "../Submissions/basic_benchmark.csv"
+}
