@@ -23,18 +23,20 @@ class ConvolutionModel(object):
                        !obj:pylearn2.models.mlp.ConvRectifiedLinear {
                            layer_name: 'h2',
                            output_channels: 64,
-                           kernel_shape: [5, 5],
+                           kernel_shape: [8, 8],
                            pool_shape: [4, 4],
                            pool_stride: [2, 2],
-                           irange: .05
+                           irange: .05,
+                           max_kernel_norm: 0.9365
                        },
                        !obj:pylearn2.models.mlp.ConvRectifiedLinear {
                            layer_name: 'h3',
                            output_channels: 64,
                            kernel_shape: [5, 5],
-                           pool_shape: [4, 4],
-                           pool_stride: [2, 2],
-                           irange: .05
+                           pool_shape: [2, 2],
+                           pool_stride: [1, 1],
+                           irange: .05,
+                           max_kernel_norm: 0.9365
                        },
                        !obj:pylearn2.models.mlp.ConvRectifiedLinear {
                            layer_name: 'h4',
@@ -42,28 +44,30 @@ class ConvolutionModel(object):
                            kernel_shape: [5, 5],
                            pool_shape: [4, 4],
                            pool_stride: [2, 2],
-                           irange: .05
+                           irange: .05,
+                           max_kernel_norm: 0.9365
                        },
                        !obj:pylearn2.models.mlp.Sigmoid {
                            layer_name: 'h0',
-                           dim: 10000,
+                           dim: 5000,
                            irange: .05
                        },
                        !obj:pylearn2.models.mlp.Sigmoid {
                            layer_name: 'h1',
-                           dim: 10000,
+                           dim: 5000,
                            irange: .05
                        },
                        !obj:pylearn2.models.mlp.Softmax {
                            layer_name: 'y',
                            n_classes: 7,
-                           irange: 0.
+                           istdev: 0.05,
+                           max_col_norm: 0.9365
                        }
                       ]
             },
             algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
-              batch_size: 50,
-              learning_rate: .2,
+              batch_size: 100,
+              learning_rate: 0.001,
               learning_rule: !obj:pylearn2.training_algorithms.learning_rule.Momentum {
                   init_momentum: 0.5,
               },
@@ -77,21 +81,10 @@ class ConvolutionModel(object):
                               path: 'csv/test.csv'
                       }
                   },
-              cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
-                  !obj:pylearn2.costs.cost.MethodCost {
-                      method: 'cost_from_X'
-                  }, !obj:pylearn2.costs.mlp.WeightDecay {
-                      coeffs: [ .00005, .00005, .00005, 0.00005, 0.00005, 0.00005 ]
-                  }
-                ]
-              },
               termination_criterion: !obj:pylearn2.termination_criteria.And {
                   criteria: [
-                      !obj:pylearn2.termination_criteria.MonitorBased {
-                          channel_name: "valid_y_misclass"
-                      },
                       !obj:pylearn2.termination_criteria.EpochCounter {
-                          max_epochs: 10000
+                          max_epochs: 500
                       }
                   ]
               }
